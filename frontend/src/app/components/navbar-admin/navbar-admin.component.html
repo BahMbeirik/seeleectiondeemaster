@@ -1,0 +1,175 @@
+<nav class="bg-white shadow fixed top-0 left-0 w-full z-10 ">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between h-16">
+      <!-- Logo et navigation principale -->
+      <div class="flex">
+        <div class="flex-shrink-0 flex items-center">
+          <!-- Logo -->
+          <a   class="text-indigo-600 font-bold text-xl">FST-Selection</a>
+        </div>
+        
+        <!-- Liens de navigation principaux -->
+        <div class="hidden sm:ml-6 sm:flex sm:space-x-8">
+          <a *ngIf="isAdmin()" routerLink="/users" routerLinkActive="border-indigo-500 text-indigo-900" 
+             [routerLinkActiveOptions]="{exact: true}"
+             class=" text-gray-500 hover:border-indigo-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition duration-150 ease-in-out">
+            Gestion des utilisateurs
+          </a>
+          <a *ngIf="isAdmin()" routerLink="/parcours" routerLinkActive="border-indigo-500 text-indigo-900"
+             class=" text-gray-500 hover:border-indigo-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition duration-150 ease-in-out">
+            Gestion des parcours
+          </a>
+          <a *ngIf="isAdmin()" routerLink="/etablissements" routerLinkActive="border-indigo-500 text-indigo-900"
+             class=" text-gray-500 hover:border-indigo-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition duration-150 ease-in-out">
+            Gestion des etablissements
+          </a>
+          <a *ngIf="isJury()" routerLink="/candidat-result" routerLinkActive="border-indigo-500 text-indigo-900 "
+             class=" text-gray-500 hover:border-indigo-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition duration-150 ease-in-out">
+            Resultats
+          </a>
+          <a *ngIf="isJury()" routerLink="/candidats" routerLinkActive="border-indigo-500 text-indigo-900"
+             class=" text-gray-500 hover:border-indigo-300 hover:text-gray-700 inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium transition duration-150 ease-in-out">
+            Gestion des candidats
+          </a>
+          
+        </div>
+      </div>
+      
+      <!-- Boutons d'authentification -->
+      <div class="hidden sm:ml-6 sm:flex sm:items-center">
+        <ng-container *ngIf="!(isLoggedIn$ | async); else userMenu">
+          <a routerLink="/login"
+             class="ml-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+            Connexion
+          </a>
+          <a routerLink="/register"
+             class="ml-4 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out">
+            Inscription
+          </a>
+        </ng-container>
+        
+        <!-- Menu utilisateur connecté -->
+        <ng-template #userMenu>
+          <div class="ml-3 relative">
+            <div>
+              <button type="button" (click)="toggleUserMenu()" 
+                      class="bg-white rounded-full flex text-sm focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500" 
+                      id="user-menu-button" 
+                      aria-expanded="false" 
+                      aria-haspopup="true">
+                <img class="h-8 w-8 rounded-full" src="data:image/jpeg;base64,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" alt="">
+              </button>
+            </div>
+            
+            <!-- Menu déroulant utilisateur -->
+            <div *ngIf="isUserMenuOpen" 
+                 class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" 
+                 role="menu" 
+                 aria-orientation="vertical" 
+                 aria-labelledby="user-menu-button" 
+                 tabindex="-1">
+              <a routerLink="/profil" 
+                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
+                 role="menuitem" 
+                 tabindex="-1">
+                Mon profil
+              </a>
+              <a routerLink="/parametres" 
+                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" 
+                 role="menuitem" 
+                 tabindex="-1">
+                Paramètres
+              </a>
+              <a (click)="logout()" 
+                 class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 cursor-pointer" 
+                 role="menuitem" 
+                 tabindex="-1">
+                Déconnexion
+              </a>
+            </div>
+          </div>
+        </ng-template>
+      </div>
+      
+      <!-- Bouton menu mobile -->
+      <div class="flex items-center sm:hidden">
+        <button type="button" (click)="toggleMobileMenu()"
+                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500" 
+                aria-controls="mobile-menu" 
+                [attr.aria-expanded]="isMobileMenuOpen">
+          <span class="sr-only">Ouvrir le menu</span>
+          <!-- Icône menu (3 barres) -->
+          <svg *ngIf="!isMobileMenuOpen" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
+          </svg>
+          <!-- Icône fermer (X) -->
+          <svg *ngIf="isMobileMenuOpen" class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Menu mobile -->
+  <div *ngIf="isMobileMenuOpen" class="sm:hidden" id="mobile-menu">
+    <div class="pt-2 pb-3 space-y-1">
+      <a routerLink="/users" routerLinkActive="bg-indigo-50 border-indigo-500 text-indigo-700"
+         [routerLinkActiveOptions]="{exact: true}"
+         class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out">
+        Gestion des utilisateurs
+      </a>
+      <a routerLink="/parcours" routerLinkActive="bg-indigo-50 border-indigo-500 text-indigo-700"
+         class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out">
+        Gestion des parcours
+      </a>
+      <a routerLink="/etablissements" routerLinkActive="bg-indigo-50 border-indigo-500 text-indigo-700"
+         class="border-transparent text-gray-500 hover:bg-gray-50 hover:border-gray-300 hover:text-gray-700 block pl-3 pr-4 py-2 border-l-4 text-base font-medium transition duration-150 ease-in-out">
+        Gestion des etablissements
+      </a>
+      
+    </div>
+    
+    <!-- Options de menu mobile pour utilisateur -->
+    <div class="pt-4 pb-3 border-t border-gray-200">
+      <ng-container *ngIf="!(isLoggedIn$ | async); else mobileUserMenu">
+        <div class="flex items-center px-4">
+          <a routerLink="/login"
+             class="flex-1 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-indigo-600 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out text-center">
+            Connexion
+          </a>
+          <a routerLink="/register"
+             class="flex-1 ml-3 px-4 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition duration-150 ease-in-out text-center">
+            Inscription
+          </a>
+        </div>
+      </ng-container>
+      
+      <ng-template #mobileUserMenu>
+        <div class="flex items-center px-4">
+          <div class="flex-shrink-0">
+            <img class="h-10 w-10 rounded-full" src="https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80" alt="">
+          </div>
+          <div class="ml-3">
+            <div class="text-base font-medium text-gray-800">{{ userName }}</div>
+            <div class="text-sm font-medium text-gray-500">{{ userEmail }}</div>
+          </div>
+        </div>
+        <div class="mt-3 space-y-1">
+          <a routerLink="/profil" 
+             class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition duration-150 ease-in-out">
+            Mon profil
+          </a>
+          <a routerLink="/parametres" 
+             class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition duration-150 ease-in-out">
+            Paramètres
+          </a>
+          <a (click)="logout()" 
+             class="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100 transition duration-150 ease-in-out cursor-pointer">
+            Déconnexion
+          </a>
+        </div>
+      </ng-template>
+    </div>
+  </div>
+</nav>

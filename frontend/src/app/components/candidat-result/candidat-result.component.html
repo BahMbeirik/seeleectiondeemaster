@@ -1,0 +1,72 @@
+<div class="max-w-full overflow-hidden bg-white shadow-lg rounded-lg" *ngFor="let parcoursEntry of candidatsOrganises | keyvalue">
+  <div class="px-6 py-4 bg-gradient-to-r from-blue-600 to-blue-800">
+    <h2 class="text-xl font-bold text-white">Parcours : {{ parcoursEntry.key }}</h2>
+  </div>
+  
+  <div class="p-4 space-y-6" *ngFor="let etablissementEntry of parcoursEntry.value | keyvalue">
+    <div class="p-3 bg-blue-50 border-l-4 border-blue-500 rounded-md">
+      <h3 class="text-lg font-semibold text-blue-800">Établissement : {{ etablissementEntry.key }}</h3>
+    </div>
+    
+    <div class="space-y-6" *ngFor="let specialiteEntry of etablissementEntry.value | keyvalue">
+      <div class="p-2 bg-gray-100 border-l-4 border-gray-500 rounded-md">
+        <h4 class="text-md font-medium text-gray-700">Spécialité : {{ specialiteEntry.key }}</h4>
+      </div>
+      
+      <div class="overflow-x-auto shadow-md rounded-lg">
+        <table class="min-w-full divide-y divide-gray-200">
+          <thead class="bg-gray-50">
+            <tr>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left">Nom et Prénom</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left">N°I ou bac</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Ann Bac</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Ann Dip</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Moy 1</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Moy 2</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Moy 3</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Moy 4</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Moy 5</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Moy 6</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Bonus</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Malus</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Pénalité</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">MC</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left">Spécialité</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left">Étab dip</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-left">Choix</th>
+              <th class="px-3 py-3 text-xs font-medium text-gray-500 uppercase tracking-wider text-center">Décision</th>
+            </tr>
+          </thead>
+          <tbody class="bg-white divide-y divide-gray-200">
+            <tr *ngFor="let candidat of specialiteEntry.value; let i = index" [ngClass]="i % 2 === 0 ? 'bg-white' : 'bg-gray-50'" class="hover:bg-blue-50 transition-colors duration-150">
+              <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-gray-900">{{ candidat.nom }} {{ candidat.prenom }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700">{{ candidat.numeroIouBac }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 text-center">{{ candidat.anneeBac }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 text-center">{{ candidat.anneeLicence }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 text-center">{{ candidat.moyenneReleve1 }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 text-center">{{ candidat.moyenneReleve2 }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 text-center">{{ candidat.moyenneReleve3 }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 text-center">{{ candidat.moyenneReleve4 }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 text-center">{{ candidat.moyenneReleve5 }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 text-center">{{ candidat.moyenneReleve6 }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 text-center">{{ candidat.bonnus }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 text-center">{{ candidat.malus }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700 text-center">{{ candidat.penalite }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-center">{{ candidat.moyenneClassement | number: '1.2-2'}}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700">{{ candidat.filier }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700">{{ candidat.etablissement.nom }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm text-gray-700">{{ candidat.parcours }}</td>
+              <td class="px-3 py-2 whitespace-nowrap text-sm font-medium text-center">
+                <span class="inline-flex px-2 py-1 text-xs font-semibold rounded-full" [ngClass]="{
+                  'bg-green-100 text-green-800': candidat.statut === 'retenu',
+                  'bg-yellow-100 text-yellow-800': candidat.statut === 'en attente',
+                  'bg-red-100 text-red-800': candidat.statut === 'non retenu'
+                }">{{ candidat.statut }}</span>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>

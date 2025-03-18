@@ -1,0 +1,248 @@
+<form (ngSubmit)="onSubmit()" class="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
+  <h1 class="text-2xl font-bold text-gray-800 mb-6">Formulaire de candidature</h1>
+  
+  <!-- Informations personnelles -->
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Nom :</label>
+      <input [(ngModel)]="candidat.nom" name="nom" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+    
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Prénom :</label>
+      <input [(ngModel)]="candidat.prenom" name="prenom" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+    
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Numéro de Bac ou I :</label>
+      <input [(ngModel)]="candidat.numeroIouBac" name="numeroIouBac" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+  </div>
+  
+  <!-- Établissement et Filière -->
+  <div class="bg-gray-50 p-4 rounded-md mb-6">
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Établissement</h2>
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div class="space-y-2">
+        <label for="etablissement" class="block text-sm font-medium text-gray-700">Établissement :</label>
+        <select [(ngModel)]="candidat.etablissement.id" name="etablissement" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option *ngFor="let etablissement of etablissements" [value]="etablissement.id">
+            {{ etablissement.nom }}
+          </option>
+        </select>
+      </div>
+      
+      <div class="space-y-2">
+        <label for="filier" class="block text-sm font-medium text-gray-700">Filière :</label>
+        <select id="filier" [(ngModel)]="candidat.filier" name="filier" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+          <option *ngFor="let filiere of filieres" [ngValue]="filiere">
+            {{ filiere }}
+          </option>
+        </select>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Parcours Choisis -->
+  <div class="bg-gray-50 p-4 rounded-md mb-6">
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Parcours Choisis</h2>
+    <div class="space-y-2">
+      <label for="parcoursChoisis" class="block text-sm font-medium text-gray-700">Parcours :</label>
+      <select id="parcoursChoisis" [(ngModel)]="candidat.parcoursChoisis" name="parcoursChoisis" multiple required class="w-full px-3 py-2 h-22 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option *ngFor="let parcours of parcoursList" [ngValue]="parcours">
+          {{ parcours.nom }}
+        </option>
+      </select>
+      <p class="text-sm text-green-500">Maintenez Ctrl ou Cmd pour sélectionner plusieurs options</p>
+    </div>
+  </div>
+  
+  <!-- Fichiers -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Diplôme Bac :</label>
+      <input type="file" (change)="onFileChange($event, 'diplomeBacPath')" name="diplomeBacPath" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Diplôme Licence :</label>
+      <input type="file" (change)="onFileChange($event, 'diplomeLicencePath')" name="diplomeLicencePath" class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+  </div>
+  
+  <!-- Années et Moyennes -->
+  <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Année du Bac :</label>
+      <input [(ngModel)]="candidat.anneeBac" name="anneeBac" type="number" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Année de Licence :</label>
+      <input [(ngModel)]="candidat.anneeLicence" name="anneeLicence" type="number" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Moyenne du Bac :</label>
+      <input type="number" [(ngModel)]="candidat.moyenneBac" name="moyenneBac" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+    <div class="space-y-2">
+      <label class="block text-sm font-medium text-gray-700">Moyenne de Licence :</label>
+      <input type="number" [(ngModel)]="candidat.moyenneLicence" name="moyenneLicence" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+    </div>
+  </div>
+  
+  <!-- Relevés de notes -->
+  <div class="space-y-6 mb-6">
+    <h2 class="text-xl font-semibold text-gray-700 mb-4">Relevés de notes</h2>
+    
+    <!-- Relevé 1 -->
+    <div class="bg-gray-50 p-4 rounded-md">
+      <h3 class="font-medium text-gray-700 mb-3">Relevé 1</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Relevé de note :</label>
+          <input type="file" (change)="onFileChange($event, 'releve1Path')" name="releve1Path" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Moyenne Relevé 1:</label>
+          <input type="number" [(ngModel)]="candidat.moyenneReleve1" name="moyenneReleve1" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">État de validation :</label>
+          <select [(ngModel)]="candidat.etatValidation1" name="etatValidation1" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="Premier Session">Premier Session</option>
+            <option value="Deuxieme Session">Deuxième Session</option>
+          </select>
+        </div>
+        
+      </div>
+    </div>
+    
+    <!-- Relevé 2 -->
+    <div class="bg-gray-50 p-4 rounded-md">
+      <h3 class="font-medium text-gray-700 mb-3">Relevé 2</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Relevé de note :</label>
+          <input type="file" (change)="onFileChange($event, 'releve2Path')" name="releve2Path" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Moyenne :</label>
+          <input type="number" [(ngModel)]="candidat.moyenneReleve2" name="moyenneReleve2" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">État de validation :</label>
+          <select [(ngModel)]="candidat.etatValidation2" name="etatValidation2" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="Premier Session">Premier Session</option>
+            <option value="Deuxieme Session">Deuxième Session</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Relevé 3 -->
+    <div class="bg-gray-50 p-4 rounded-md">
+      <h3 class="font-medium text-gray-700 mb-3">Relevé 3</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Relevé de note :</label>
+          <input type="file" (change)="onFileChange($event, 'releve3Path')" name="releve3Path" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Moyenne :</label>
+          <input type="number" [(ngModel)]="candidat.moyenneReleve3" name="moyenneReleve3" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">État de validation :</label>
+          <select [(ngModel)]="candidat.etatValidation3" name="etatValidation3" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="Premier Session">Premier Session</option>
+            <option value="Deuxieme Session">Deuxième Session</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Relevé 4 -->
+    <div class="bg-gray-50 p-4 rounded-md">
+      <h3 class="font-medium text-gray-700 mb-3">Relevé 4</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Relevé de note :</label>
+          <input type="file" (change)="onFileChange($event, 'releve4Path')" name="releve4Path" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Moyenne :</label>
+          <input type="number" [(ngModel)]="candidat.moyenneReleve4" name="moyenneReleve4" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">État de validation :</label>
+          <select [(ngModel)]="candidat.etatValidation4" name="etatValidation4" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="Premier Session">Premier Session</option>
+            <option value="Deuxieme Session">Deuxième Session</option>
+          </select>
+          </div>
+      </div>
+    </div>
+    
+    <!-- Relevé 5 -->
+    <div class="bg-gray-50 p-4 rounded-md">
+      <h3 class="font-medium text-gray-700 mb-3">Relevé 5</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Relevé de note :</label>
+          <input type="file" (change)="onFileChange($event, 'releve5Path')" name="releve5Path" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Moyenne :</label>
+          <input type="number" [(ngModel)]="candidat.moyenneReleve5" name="moyenneReleve5" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">État de validation :</label>
+          <select [(ngModel)]="candidat.etatValidation5" name="etatValidation5" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="Premier Session">Premier Session</option>
+            <option value="Deuxieme Session">Deuxième Session</option>
+          </select>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Relevé 6 -->
+    <div class="bg-gray-50 p-4 rounded-md">
+      <h3 class="font-medium text-gray-700 mb-3">Relevé 6</h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Relevé de note :</label>
+          <input type="file" (change)="onFileChange($event, 'releve6Path')" name="releve6Path" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Moyenne :</label>
+          <input type="number" [(ngModel)]="candidat.moyenneReleve6" name="moyenneReleve6" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+        
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">État de validation :</label>
+          <select [(ngModel)]="candidat.etatValidation6" name="etatValidation6" required class="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <option value="Premier Session">Premier Session</option>
+            <option value="Deuxieme Session">Deuxième Session</option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Bouton de soumission -->
+
+    <button type="submit" class="mt-8 px-6 py-3 bg-blue-600 text-white w-full rounded-md hover:bg-blue-700">
+      Soumettre la candidature
+    </button>
+  
+</form>

@@ -1,0 +1,427 @@
+<div *ngIf="errorMessage" class="px-4 py-3 bg-red-50">
+  <p class="text-sm text-red-600">{{ errorMessage }}</p>
+</div>
+<div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-4 rounded-t-lg shadow-lg flex items-center justify-between">
+  <h2 class="text-2xl font-bold text-white ">Liste des candidats</h2>
+  <input [(ngModel)]="searchQuery" (input)="searchCandidats()" type="text" placeholder="Rechercher un candidat"
+           class="px-4 py-2 border rounded-md w-full sm:w-64">
+</div>
+
+<div class="overflow-x-auto shadow-lg rounded-b-lg">
+  <table class="min-w-full bg-white">
+    <thead>
+      <tr class="bg-gray-100 border-b border-gray-200">
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Nom et Prénom</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Etablissement</th> 
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Filier</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">NI ou Bac</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Année du</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Moyenne Bac</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Année Licence</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Moyenne Licence</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Moyenne Releve 1</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Moyenne Releve 2</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Moyenne Releve 3</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Moyenne Releve 4</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Moyenne Releve 5</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Moyenne Releve 6</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Bonnus</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Malus</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Pénalité</th>
+        <th class="px-4 py-3 text-left text-sm font-semibold text-gray-700">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let candidat of candidats" class="border-b border-gray-200 hover:bg-blue-50 transition-colors">
+        <td class="px-4 py-2 text-sm text-gray-800 font-medium">{{ candidat.nom }} {{ candidat.prenom }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800">{{ candidat.etablissement.nom }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800">{{ candidat.filier }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800">{{ candidat.numeroIouBac }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800">{{ candidat.anneeBac }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800 font-medium">{{ candidat.moyenneBac }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800">{{ candidat.anneeLicence }}</td> 
+        <td class="px-4 py-2 text-sm text-gray-800 font-medium">{{ candidat.moyenneLicence }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800">{{ candidat.moyenneReleve1 }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800">{{ candidat.moyenneReleve2 }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800">{{ candidat.moyenneReleve3 }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800">{{ candidat.moyenneReleve4 }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800">{{ candidat.moyenneReleve5 }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800">{{ candidat.moyenneReleve6 }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800 text-green-600 font-medium">{{ candidat.bonnus }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800 text-red-600 font-medium">{{ candidat.malus }}</td>
+        <td class="px-4 py-2 text-sm text-gray-800 text-red-600 font-medium">{{ candidat.penalite }}</td>
+        <td class="px-4 py-2 text-sm">
+          <div class="flex gap-2">
+            <button (click)="openModal(candidat)" class="bg-blue-500 hover:bg-blue-600 text-white px-2 py-1 rounded text-xs">Modifier</button>
+            <button (click)="supprimerCandidat(candidat.id)" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded text-xs">Supprimer</button>
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <!-- Pagination -->
+  <div class="px-4 py-3 bg-gray-50 sm:px-6">
+    <nav class="flex justify-between">
+      <button (click)="onPageChange(currentPage - 1)" [disabled]="currentPage === 0"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-md hover:bg-gray-50">
+        Précédent
+      </button>
+      <span class="text-sm text-gray-700">
+        Page {{ currentPage + 1 }} sur {{ totalPages }}
+      </span>
+      <button (click)="onPageChange(currentPage + 1)" [disabled]="currentPage >= totalPages - 1"
+              class="px-4 py-2 text-sm font-medium text-gray-700 bg-white border rounded-md hover:bg-gray-50">
+        Suivant
+      </button>
+    </nav>
+  </div>
+  
+<!-- MODALE POUR MODIFIER UN CANDIDAT -->
+<!-- MODALE POUR MODIFIER UN CANDIDAT -->
+<div *ngIf="isModalOpen" class="fixed inset-0 flex items-center justify-center z-50">
+  <!-- Backdrop with blur effect -->
+  <div class="absolute inset-0 bg-gray-900 bg-opacity-60 backdrop-filter backdrop-blur-sm"></div>
+  
+  <!-- Modal container -->
+  <div class="bg-white rounded-xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto relative animate-fadeIn">
+    <!-- Header -->
+    <div class="bg-gradient-to-r from-blue-600 to-indigo-700 p-6 rounded-t-xl">
+      <h2 class="text-2xl font-bold text-white flex items-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
+        </svg>
+        Modifier Candidat
+      </h2>
+    </div>
+    
+    <!-- Content area with padding -->
+    <div class="p-6">
+      <!-- Divider sections with headings -->
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+          Informations personnelles
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">Nom</label>
+            <input [(ngModel)]="selectedCandidat.nom" name="nom" required 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+          
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">Prénom</label>
+            <input [(ngModel)]="selectedCandidat.prenom" name="prenom" required 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+          
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">Numéro de Bac ou I</label>
+            <input [(ngModel)]="selectedCandidat.numeroIouBac" name="numeroIouBac" required 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+        </div>
+      </div>
+
+      <!-- Établissement et Filière -->
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+          Affiliation académique
+        </h3>
+        
+        <div class="space-y-2">
+          <label for="etablissement" class="block text-sm font-medium text-gray-700">Établissement</label>
+          <div class="relative">
+            <select id="etablissement" [(ngModel)]="selectedCandidat.etablissement.id" name="etablissement" required 
+                  class="appearance-none w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+              <option *ngFor="let etablissement of etablissements" [value]="etablissement.id"> 
+                {{ etablissement.nom }}
+              </option>
+            </select>
+            <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+              <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Années -->
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+          Dates académiques
+        </h3>
+        
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">Année du Bac</label>
+            <input [(ngModel)]="selectedCandidat.anneeBac" name="anneeBac" type="number" required 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+          
+          <div class="space-y-2">
+            <label class="block text-sm font-medium text-gray-700">Année de Licence</label>
+            <input [(ngModel)]="selectedCandidat.anneeLicence" name="anneeLicence" type="number" required 
+                  class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+          </div>
+        </div>
+      </div>
+
+      <!-- Relevés de notes -->
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+          Relevés de notes
+        </h3>
+        
+        <!-- Tabs for relevés -->
+        <div class="mb-6">
+          <ul class="flex flex-wrap border-b border-gray-200 overflow-x-auto whitespace-nowrap">
+            <li class="mr-2">
+              <a href="#releve1" class="inline-block py-2 px-4 text-sm font-medium text-center text-blue-600 bg-white rounded-t-lg border-b-2 border-blue-600 active">
+                Relevé 1
+              </a>
+            </li>
+            <li class="mr-2">
+              <a href="#releve2" class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 hover:text-gray-600 hover:bg-gray-50 rounded-t-lg">
+                Relevé 2
+              </a>
+            </li>
+            <li class="mr-2">
+              <a href="#releve3" class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 hover:text-gray-600 hover:bg-gray-50 rounded-t-lg">
+                Relevé 3
+              </a>
+            </li>
+            <li class="mr-2">
+              <a href="#releve4" class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 hover:text-gray-600 hover:bg-gray-50 rounded-t-lg">
+                Relevé 4
+              </a>
+            </li>
+            <li class="mr-2">
+              <a href="#releve5" class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 hover:text-gray-600 hover:bg-gray-50 rounded-t-lg">
+                Relevé 5
+              </a>
+            </li>
+            <li class="mr-2">
+              <a href="#releve6" class="inline-block py-2 px-4 text-sm font-medium text-center text-gray-500 hover:text-gray-600 hover:bg-gray-50 rounded-t-lg">
+                Relevé 6
+              </a>
+            </li>
+          </ul>
+        </div>
+        
+        <!-- All relevés expanded for visibility -->
+        <div class="space-y-4">
+          <!-- Relevé 1 -->
+          <div id="releve1" class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex justify-between items-center w-full p-4 text-left bg-gray-50">
+              <span class="font-medium">Relevé 1</span>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">Moyenne</label>
+                  <input type="number" [(ngModel)]="selectedCandidat.moyenneReleve1" name="moyenneReleve1" required 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">État de validation</label>
+                  <div class="relative">
+                    <select  [(ngModel)]="selectedCandidat.etat_validation1" name="etatValidation1" required 
+                          class="appearance-none w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                      <option value="Premier Session">Premier Session</option>
+                      <option value="Deuxieme Session">Deuxième Session</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Relevé 2 -->
+          <div id="releve2" class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex justify-between items-center w-full p-4 text-left bg-gray-50">
+              <span class="font-medium">Relevé 2</span>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">Moyenne</label>
+                  <input type="number" [(ngModel)]="selectedCandidat.moyenneReleve2" name="moyenneReleve2" required 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">État de validation</label>
+                  <div class="relative">
+                    <select [(ngModel)]="selectedCandidat.etat_validation2" name="etatValidation2" required 
+                          class="appearance-none w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                      <option value="Premier Session">Premier Session</option>
+                      <option value="Deuxieme Session">Deuxième Session</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Relevé 3 -->
+          <div id="releve3" class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex justify-between items-center w-full p-4 text-left bg-gray-50">
+              <span class="font-medium">Relevé 3</span>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">Moyenne</label>
+                  <input type="number" [(ngModel)]="selectedCandidat.moyenneReleve3" name="moyenneReleve3" required 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">État de validation</label>
+                  <div class="relative">
+                    <select [(ngModel)]="selectedCandidat.etat_validation3" name="etatValidation3" required 
+                          class="appearance-none w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                      <option value="Premier Session">Premier Session</option>
+                      <option value="Deuxieme Session">Deuxième Session</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Relevé 4 -->
+          <div id="releve4" class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex justify-between items-center w-full p-4 text-left bg-gray-50">
+              <span class="font-medium">Relevé 4</span>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">Moyenne</label>
+                  <input type="number" [(ngModel)]="selectedCandidat.moyenneReleve4" name="moyenneReleve4" required 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">État de validation</label>
+                  <div class="relative">
+                    <select [(ngModel)]="selectedCandidat.etat_validation4" name="etatValidation4" required 
+                          class="appearance-none w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                      <option value="Premier Session">Premier Session</option>
+                      <option value="Deuxieme Session">Deuxième Session</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Relevé 5 -->
+          <div id="releve5" class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex justify-between items-center w-full p-4 text-left bg-gray-50">
+              <span class="font-medium">Relevé 5</span>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">Moyenne</label>
+                  <input type="number" [(ngModel)]="selectedCandidat.moyenneReleve5" name="moyenneReleve5" required 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">État de validation</label>
+                  <div class="relative">
+                    <select [(ngModel)]="selectedCandidat.etat_validation5" name="etatValidation5" required 
+                          class="appearance-none w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                      <option value="Premier Session">Premier Session</option>
+                      <option value="Deuxieme Session">Deuxième Session</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Relevé 6 -->
+          <div id="releve6" class="border border-gray-200 rounded-lg overflow-hidden">
+            <div class="flex justify-between items-center w-full p-4 text-left bg-gray-50">
+              <span class="font-medium">Relevé 6</span>
+            </div>
+            <div class="p-4 bg-white">
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">Moyenne</label>
+                  <input type="number" [(ngModel)]="selectedCandidat.moyenneReleve6" name="moyenneReleve6" required 
+                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                </div>
+                <div class="space-y-2">
+                  <label class="block text-sm font-medium text-gray-700">État de validation</label>
+                  <div class="relative">
+                    <select [(ngModel)]="selectedCandidat.etat_validation6" name="etatValidation6" required 
+                          class="appearance-none w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+                      <option value="Premier Session">Premier Session</option>
+                      <option value="Deuxieme Session">Deuxième Session</option>
+                    </select>
+                    <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
+                      <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                        <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/>
+                      </svg>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Pénalité -->
+      <div class="mb-8">
+        <h3 class="text-lg font-semibold text-gray-800 mb-4 pb-2 border-b border-gray-200">
+          Information additionnelle
+        </h3>
+        <div class="space-y-2">
+          <label class="block text-sm font-medium text-gray-700">Pénalité</label>
+          <input [(ngModel)]="selectedCandidat.penalite" name="penalite" required 
+                class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-all">
+        </div>
+      </div>
+    </div>
+    
+    <!-- Footer -->
+    <div class="bg-gray-50 px-6 py-4 flex justify-end space-x-4 rounded-b-xl border-t border-gray-200">
+      <button (click)="closeModal()" class="px-6 py-2 border border-gray-300 rounded-lg text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 transition-colors">
+        Annuler
+      </button>
+      <button (click)="updateCandidat()" class="px-6 py-2 bg-gradient-to-r from-blue-600 to-indigo-700 text-white rounded-lg hover:from-blue-700 hover:to-indigo-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+        Enregistrer les modifications
+      </button>
+    </div>
+  </div>
+</div>
