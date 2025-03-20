@@ -15,7 +15,7 @@ public interface CandidatRepository extends JpaRepository<Candidat, Long> {
   // Recherche par nom (seulement le nom)
   List<Candidat> findByNomContainingIgnoreCase(String query);
   
-  // OU recherche par nom OU prénom (si besoin des deux)
+  // OU recherche par nom OU prénom 
   @Query("SELECT c FROM Candidat c WHERE LOWER(c.nom) LIKE LOWER(CONCAT('%', :query, '%')) OR LOWER(c.prenom) LIKE LOWER(CONCAT('%', :query, '%'))")
   List<Candidat> searchByNomOrPrenom(@Param("query") String query);
 
